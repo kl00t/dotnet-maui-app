@@ -5,8 +5,7 @@
              Title="My To Dos">
 
     <ContentPage.ToolbarItems>
-        <ToolbarItem Text="Add To Do" Clicked="OnAddToDoClicked">
-        </ToolbarItem>
+        <ToolbarItem Text="Add To Do" Clicked="OnAddToDoClicked" />
     </ContentPage.ToolbarItems>
 
     <CollectionView x:Name="collectionView"
@@ -14,13 +13,11 @@
                     SelectionChanged="OnSelectionChanged"
                     Margin="30">
         <CollectionView.ItemsLayout>
-            <LinearItemsLayout Orientation="Vertical" ItemSpacing="30">
-            </LinearItemsLayout>
+            <LinearItemsLayout Orientation="Vertical" ItemSpacing="30" />
         </CollectionView.ItemsLayout>
         <CollectionView.ItemTemplate>
             <DataTemplate>
-                <Label Text="{Binding ToDoName}" FontSize="Medium">
-                </Label>
+                <Label Text="{Binding ToDoName}" FontSize="Medium" />
             </DataTemplate>
         </CollectionView.ItemTemplate>
     </CollectionView>
