@@ -1,5 +1,7 @@
 ﻿using System.Diagnostics;
 using ToDoMauiClient.DataServices;
+using ToDoMauiClient.Models;
+using ToDoMauiClient.Pages;
 
 namespace ToDoMauiClient
 {
@@ -24,11 +26,23 @@ namespace ToDoMauiClient
         async void OnAddToDoClicked(object sender, EventArgs e)
         {
             Debug.WriteLine("Add Button Clicked.");
+            var navigationParameter = new Dictionary<string, object>
+            {
+                { nameof(ToDo), new ToDo() }
+            };
+
+            await Shell.Current.GoToAsync(nameof(ManageToDoPage), navigationParameter);
         }
 
         async void OnSelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             Debug.WriteLine("Item Changed Clicked.");
+            var navigationParameter = new Dictionary<string, object>
+            {
+                { nameof(ToDo), e.CurrentSelection.FirstOrDefault() as ToDo }
+            };
+
+            await Shell.Current.GoToAsync(nameof(ManageToDoPage), navigationParameter);
         }
     }
 }
