@@ -1,24 +1,34 @@
-﻿namespace ToDoMauiClient
+﻿using System.Diagnostics;
+using ToDoMauiClient.DataServices;
+
+namespace ToDoMauiClient
 {
     public partial class MainPage : ContentPage
     {
-        int count = 0;
+        private readonly IRestDataService _restDataService;
 
-        public MainPage()
+        public MainPage(IRestDataService restDataService)
         {
             InitializeComponent();
+
+            _restDataService = restDataService;
         }
 
-        private void OnCounterClicked(object sender, EventArgs e)
+        protected async override void OnAppearing()
         {
-            count++;
+            base.OnAppearing();
 
-            if (count == 1)
-                CounterBtn.Text = $"Clicked {count} time";
-            else
-                CounterBtn.Text = $"Clicked {count} times";
+            collectionView.ItemsSource = await _restDataService.GetAllToDosAsync();
+        }
 
-            SemanticScreenReader.Announce(CounterBtn.Text);
+        async void OnAddToDoClicked(object sender, EventArgs e)
+        {
+            Debug.WriteLine("Add Button Clicked.");
+        }
+
+        async void OnSelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            Debug.WriteLine("Item Changed Clicked.");
         }
     }
 }
