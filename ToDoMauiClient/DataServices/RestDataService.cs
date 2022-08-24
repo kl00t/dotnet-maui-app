@@ -12,9 +12,9 @@ public class RestDataService : IRestDataService
     private readonly string _url;
     private readonly JsonSerializerOptions _jsonSerializerOptions;
 
-    public RestDataService()
+    public RestDataService(HttpClient httpClient)
     {
-        _httpClient = new HttpClient();
+        _httpClient = httpClient;
         _baseAddress = DeviceInfo.Platform == DevicePlatform.Android ? "http://10.0.2.2:5097" : "https://localhost:7097";
         _url = $"{_baseAddress}/api";
         _jsonSerializerOptions = new JsonSerializerOptions
@@ -109,9 +109,35 @@ public class RestDataService : IRestDataService
         return todos;
     }
 
-    public Task<ToDo> GetToDoAsync(int id)
+    public async Task<ToDo> GetToDoAsync(int id)
     {
-        throw new NotImplementedException();
+        ToDo todo = new();
+        if (Connectivity.Current.NetworkAccess != NetworkAccess.Internet)
+        {
+            Debug.WriteLine("No Internet Access.");
+            return todo;
+        }
+
+        try
+        {
+            HttpResponseMessage response = await _httpClient.GetAsync($"{_url}/todo/{id}");
+            if (response.IsSuccessStatusCode)
+            {
+                string content = await response.Content.ReadAsStringAsync();
+                todo = JsonSerializer.Deserialize<ToDo>(content, _jsonSerializerOptions);
+            }
+            else
+            {
+                Debug.WriteLine("Non Http 2xx Response.");
+            }
+        }
+        catch (Exception ex)
+        {
+            Debug.WriteLine($"Exception: {ex.Message}");
+        }
+
+        return todo;
+
     }
 
     public async Task UpdateToDoAsync(ToDo toDo)
